@@ -8,6 +8,7 @@
 <body>
     <div id="grid"></div>
 <button id="next">Next generation</button>
+<button id="auto">Autorun</button>
 <style>
     #grid {
         position: absolute;
@@ -20,10 +21,19 @@
     }
 </style>
 <script>
+let buttonAuto = document.querySelector("#auto")
+
 let grid = document.querySelector("#grid")
 let button = document.querySelector("#next")
 button.addEventListener("click", () => {
 newGen(grid)
+})
+let running = null
+buttonAuto.addEventListener("click", () => {
+        if (running) {
+            clearInterval(running)
+            running = null
+        } else running = setInterval(() => newGen(grid), 400)
 })
 class Matrix {
     constructor(width, height) {
@@ -37,7 +47,7 @@ class Matrix {
         }
     }
 }
-let matrix = new Matrix(30, 30)
+let matrix = new Matrix(25, 25)
 for (element of matrix.content) {
     let newCell = document.createElement("input")
     newCell.type = "checkbox"
@@ -60,8 +70,7 @@ function newGen(node) {
             }
         }
         cell.dataset.n = counter
-        console.log(cell.dataset.x, cell.dataset.y, cell.dataset.n)
-    }
+        }
     for (cell of cellGrid) {
         if (cell.checked == true && (cell.dataset.n < 2 || cell.dataset.n > 3)) {
             cell.checked = false
