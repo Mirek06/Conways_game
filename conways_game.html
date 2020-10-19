@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="grid"></div>
+<button id="next">Next generation</button>
+<style>
+    #grid {
+        position: absolute;
+        left: 100px;
+        top: 100px
+    }
+    input {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+<script>
+let grid = document.querySelector("#grid")
+let button = document.querySelector("#next")
+button.addEventListener("click", () => {
+newGen(grid)
+})
+class Matrix {
+    constructor(width, height) {
+        this.width = width
+        this.height = height
+        this.content = []
+        for (let a = 0; a < height; a++) {
+            for (let b = 0; b < width; b++) {
+                this.content[a * width + b] = {x: b, y: a}
+            }
+        }
+    }
+}
+let matrix = new Matrix(30, 30)
+for (element of matrix.content) {
+    let newCell = document.createElement("input")
+    newCell.type = "checkbox"
+    newCell.style.position = "absolute"
+    newCell.style.left = `${element.x*20}px`
+    newCell.style.top = `${element.y*20}px`
+    newCell.dataset.x = element.x
+    newCell.dataset.y = element.y
+    newCell.dataset.n = element.n
+    newCell.checked = Math.random() < 0.7 ? false : true
+    grid.appendChild(newCell)
+}
+function newGen(node) {
+    let cellGrid = node.childNodes
+    for (cell of cellGrid) {
+        let counter = 0
+        for (otherCell of cellGrid) {
+            if (!(otherCell.dataset.x == cell.dataset.x && otherCell.dataset.y == cell.dataset.y) && Math.abs(otherCell.dataset.x - cell.dataset.x) <= 1 && Math.abs(otherCell.dataset.y - cell.dataset.y) <= 1 && otherCell.checked) {
+            counter ++
+            }
+        }
+        cell.dataset.n = counter
+        console.log(cell.dataset.x, cell.dataset.y, cell.dataset.n)
+    }
+    for (cell of cellGrid) {
+        if (cell.checked == true && (cell.dataset.n < 2 || cell.dataset.n > 3)) {
+            cell.checked = false
+        }
+        if (cell.checked == false && cell.dataset.n == 3) {
+            cell.checked = true
+        }
+    }
+}
+</script>
+</body>
+</html>
